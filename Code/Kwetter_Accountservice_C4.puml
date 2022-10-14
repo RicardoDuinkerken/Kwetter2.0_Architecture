@@ -1,0 +1,48 @@
+@startuml Kwetter_AccountService
+namespace API #DDDDDD {
+class AccountController
+class AccountMapper
+class AccountServiceProto
+
+AccountController --o AccountMapper
+AccountController *-- AccountServiceProto
+
+}
+
+namespace Core #DDDDDD {
+    class AccountMapper
+    class AccountService
+    Interface IAccountService
+
+    IAccountService <|.. AccountService
+    AccountService --o AccountMapper
+    API.AccountController ..|> AccountService
+}
+
+namespace Dal #DDDDDD {
+    class AccountServiceContext
+    class Account
+
+    Account *-- AccountServiceContext
+    AccountServiceContext <|.. Core.AccountService
+}
+
+namespace Event #DDDDDD {
+    class AccountCreatedEvent
+
+    API.AccountController --o AccountCreatedEvent
+}
+
+namespace Agent #DDDDDD {
+    interface IAccountAgent
+    class AccountAgent
+    class AccountServiceProto
+
+    IAccountAgent *-- AccountAgent
+    Core.AccountService *-- AccountAgent
+    AccountAgent *-- AccountServiceProto
+}
+
+
+
+@enduml

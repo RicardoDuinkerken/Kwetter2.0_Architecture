@@ -1,0 +1,16 @@
+@startuml Kwetter_C1
+!include <C4/C4_Context>
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+LAYOUT_WITH_LEGEND()
+
+title Kwetter System Context Diagram
+
+Person(user, User, user on Kwetter platform)
+Person(admin, Admin, Admin on kwetter platform)
+
+System(kwetter, Kwetter, The complete Kwetter application landscape)
+   
+Rel(user, kwetter, Uses, Https + Json)    
+Rel(admin, kwetter, Uses, Https + Json)    
+@enduml

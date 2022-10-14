@@ -1,0 +1,70 @@
+@startuml Kwetter_C2
+!include <C4/C4_Container>
+!include <tupadr3/devicons/angular>
+!include <tupadr3/devicons/dotnet>
+!include <tupadr3/devicons/mysql>
+
+LAYOUT_WITH_LEGEND()
+
+title Kwetter System Container Diagram
+
+'Actors
+Person(user, User, user on Kwetter platform)
+Person(admin, Admin, Admin on kwetter platform)
+
+System_Boundary(c1, Kwetter){
+    'Frontend
+    Container(frontendweb, Frontend, Angular, Kwetter Frontend, angular)
+    
+    'Backend
+    Container(frontendwebbff, Frontend WebApp BFF, DotNet, Backend For Frontend and Gateway, dotnet) 
+    Container(authentication, Authentication, DotNet, Authentication microservice, dotnet)
+    Container(account, Account, DotNet, Account microservice, dotnet)
+    Container(profile, Profile, DotNet, Profile microservice, dotnet)
+    Container(kwet, Kwet, DotNet, Kwet microservice, dotnet)
+    Container(search, Search, DotNet, Search microservice, dotnet)   
+    
+    'Database
+    ContainerDb(frontendwebbffdb, Frontend WebApp BFF Database, MySql, Holds read models, mysql)
+    ContainerDb(authenticationdb, Authentication Database, MySql, Holds authentication microservice models and read models, mysql)
+    ContainerDb(accountdb, Account Database, MySql, Holds account microservice models and read models, mysql)
+    ContainerDb(profiledb, Profile Database, MySql, Holds profile microservice models and read models, mysql)
+    ContainerDb(kwetdb, kwet Database, MySql, Holds kwet microservice models and read models, mysql)
+    ContainerDb(searchdb, Search Database, MySql, Holds search microservice models and read models, mysql)
+}
+
+'Relations actor
+Rel(user, frontendweb, Uses, Browser)
+Rel(admin, frontendweb, Uses, Browser)
+
+'Relations web
+Rel(frontendweb, frontendwebbff, Uses gateway, Https + Json)
+
+'Relations gateway
+Rel(frontendwebbff, authentication, Calls, gRPC)
+Rel(frontendwebbff, account, Calls, gRPC)
+Rel(frontendwebbff, profile, Calls, gRPC)
+Rel(frontendwebbff, kwet, Calls, gRPC)
+Rel(frontendwebbff, search, Calls, gRPC)
+
+'Relations database
+Rel(frontendwebbff, frontendwebbffdb, Database operations, jdbc)
+Rel(authentication, authenticationdb, Database operations, jdbc)
+Rel(account, accountdb, Database operations, jdbc)
+Rel(profile, profiledb, Database operations, jdbc)
+Rel(kwet, kwetdb, Database operations, jdbc)
+Rel(search, searchdb, Database operations, jdbc)
+
+'Relations microservices
+Rel(authentication, account, Calls, gRPC)
+Rel(account, profile, Calls, gRPC)
+Rel(profile, account, Calls, gRPC)
+Rel(profile, kwet, Calls, gRPC)
+Rel(kwet, profile, Calls, gRPC)
+Rel(search, kwet, Calls, gRPC)
+
+
+
+
+
+@enduml

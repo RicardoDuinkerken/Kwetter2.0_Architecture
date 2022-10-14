@@ -1,0 +1,55 @@
+@startuml Kwetter_C3
+!include <C4/C4_Component>
+!include <tupadr3/devicons/angular>
+!include <tupadr3/devicons/dotnet>
+!include <tupadr3/devicons/mysql>
+
+LAYOUT_WITH_LEGEND()
+
+title Kwetter BFF Component Diagram
+
+Container(frontendweb, Fronted WebApp, Angular, Kwetter WebApp, angular)
+
+ContainerDb(frontendwebbffdb, Kwetter WebApp BFF Database, MySql, Holds read models, mysql)
+
+Container(account, Account, DotNet, Account microservice, dotnet)
+Container(kwet, Kwet, DotNet, kwet microservice, dotnet)
+
+Container_Boundary(api, "Fronted WebApp BFF") {
+    'Components account 
+    Component(accountcontroller, "Account Controller", "Controller", "")
+    Component(accountservice, "Account Service", "Service", "")
+    Component(accountdao, "Account DAO", "Data Access Object")
+    Component(accountagent, "Account agent", "Agent", "")
+    
+    'Components Kwet 
+    Component(kwetcontroller, "Kwet Controller", "Controller", "")
+    Component(kwetservice, "Kwet service", "Service", "")
+    Component(kwetdao, "Kwet DAO", "Data Access Object")
+    Component(kwetagent, "Kwet agent", "Agent", "")
+
+    'Relations account
+    Rel(accountcontroller, accountservice, "Uses")
+    Rel(accountservice, "accountagent", "Uses")
+    Rel(accountservice, accountdao, "Uses")
+    
+    'Relations kwet
+    Rel(kwetcontroller, "kwetservice", "Uses")
+    Rel(kwetservice, "kwetagent", "Uses")
+    Rel(kwetservice, kwetdao, "Uses")
+}
+
+'Relations controllers
+Rel(frontendweb, accountcontroller, "REST") 
+Rel(frontendweb, kwetcontroller, "REST")
+
+'Relations DAO
+Rel(accountdao, frontendwebbffdb, "ODBC")
+Rel(kwetdao, frontendwebbffdb, "ODBC")
+
+'Relations agents
+Rel("accountagent", account, "gRPC")
+Rel("kwetagent", kwet, "gRPC")
+
+
+@enduml
